@@ -1,0 +1,73 @@
+%META:TOPICPARENT{name="Plugins"}%
+---+ Modify Login Plugin
+
+%SHORTDESCRIPTION%
+
+The features for modifying the login name are
+
+   * Change all characters to lower case
+   * Change all characters to upper case
+   * Strip all characters after a @ including the @
+
+And it describes how to alter the registration topic to ensure login name is in right upper/lower case for the new user. (Manual modification description) 
+
+---++ Plugin Preferences
+
+Plugin preferences are set using =configure=
+
+The plugin does not have any preferences that can be set in topics.
+
+   * $Foswiki::cfg{Plugins}{ModifyLoginPlugin}{ChangeCase}
+      * 'none' means no case conversion is done
+      * 'uppercase' means the login name is altered to uppercase
+      * 'lowercase' means the login name is altered to lowercase
+      
+
+   * $Foswiki::cfg{Plugins}{ModifyLoginPlugin}{StripAfterAtsign}
+      * Enabled means strips all characters after a @ including the @ 
+      
+---++ Ensure correct case at registration
+
+The plugin does not alter the login used when you register
+
+To ensure people do not register with the wrong case go to the !UserRegistration topic (normally %SYSTEMWEB%.UserRegistration and find the line that says
+
+<verbatim>
+   * Set BESPOKE_AUTH = <tr><td align=\"right\"> %MAKETEXT{"(how you log in) LoginName:"}% </td><td><input %NOREGISTRATION% type=\"text\" name=\"Twk1LoginName\" size=\"40\" class=\"foswikiInputField\" value=\"%REMOTE_USER%\" /> =<span class='foswikiAlert'>*</span>= </td></tr>
+</verbatim>
+
+and change it to this if you want to change to lowercase
+
+<verbatim>
+   * Set BESPOKE_AUTH = <tr><td align=\"right\"> %MAKETEXT{"(how you log in) LoginName:"}% </td><td><input %NOREGISTRATION% type=\"text\" name=\"Twk1LoginName\" size=\"40\" class=\"foswikiInputField\" value=\"%REMOTE_USER%\" onblur=\"this.value = this.value.toLowerCase();\" /> =<span class='foswikiAlert'>*</span>= </td></tr>
+</verbatim>
+
+or to this for uppercase
+
+and change it to this if you want to change to lowercase
+
+<verbatim>
+   * Set BESPOKE_AUTH = <tr><td align=\"right\"> %MAKETEXT{"(how you log in) LoginName:"}% </td><td><input %NOREGISTRATION% type=\"text\" name=\"Twk1LoginName\" size=\"40\" class=\"foswikiInputField\" value=\"%REMOTE_USER%\" onblur=\"this.value = this.value.toUpperCase();\" /> =<span class='foswikiAlert'>*</span>= </td></tr>
+</verbatim>
+
+
+<!--
+One line description, required for extensions repository catalog.
+   * Set SHORTDESCRIPTION = %$SHORTDESCRIPTION%
+-->
+
+---++ Installation
+%$INSTALL_INSTRUCTIONS%
+
+---++ Plugin Info
+
+|  Author: | Foswiki:Main.KennethLavrsen |
+|  Copyright: | &copy; 2009, Kenneth Lavrsen |
+|  License: | GPL ([[http://www.gnu.org/copyleft/gpl.html][GNU General Public License]]) |
+|  Release: | %$RELEASE% |
+|  Version: | %$VERSION% |
+|  Change&nbsp;History: | <!-- versions below in reverse order -->&nbsp; |
+|  24 Feb 2010 (1.0) | Initial release |
+|  Home: | http://foswiki.org/Extensions/%TOPIC% |
+|  Support: | http://foswiki.org/Support/%TOPIC% |
+

@@ -1,0 +1,3 @@
+data/System/ModifyLoginPlugin.txt 0644 Plugin doc page
+lib/Foswiki/Plugins/ModifyLoginPlugin.pm 0444 Plugin Perl module
+lib/Foswiki/Plugins/ModifyLoginPlugin/Config.spec 0444 Configuration settings
