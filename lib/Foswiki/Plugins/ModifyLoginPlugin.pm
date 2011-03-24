@@ -23,6 +23,12 @@ will always have his login name converted to lowercase.
 
 Foswiki will then always see the user as his lowercase login.
 
+The plugin has one additional independent feature. It can assign a login name
+based on a specific path. This is used to open a controlled backdoor to
+Foswiki via a specific list of topics. This enables creating a special user
+with a carefully assigned set of access rights. A typical use is to create
+a query page that can lookup information within a web without authentication.
+
 A plugin may be implemented to look directly at the ENV and use the
 REMOTE_USER directly. This plugin cannot deal with that. But most plugin
 should behave correctly.
@@ -45,7 +51,7 @@ use Foswiki::Plugins ();    # For the API version
 our $VERSION = '$Rev: 5771 $';
 
 # $RELEASE is used in the "Find More Extensions" automation in configure.
-our $RELEASE = '1.0';
+our $RELEASE = '2.0';
 
 # Short description of this plugin
 # One line description, is shown in the %SYSTEMWEB%.TextFormattingRules topic:
@@ -125,11 +131,18 @@ This handler is called very early, immediately after =earlyInitPlugin=.
 sub initializeUserHandler {
     my ( $loginName, $url, $pathInfo ) = @_;
 
+    # Map path to special users unless you are already authenticated as an
+    # AdminGroup member
+    if ( defined $Foswiki::cfg{Plugins}{ModifyLoginPlugin}{MapPathToUser}{$pathInfo} &&
+         ! Foswiki::Func::isAnAdmin( $loginName ) ) {
+        return $Foswiki::cfg{Plugins}{ModifyLoginPlugin}{MapPathToUser}{$pathInfo};
+    }
+
     # Change case of login name
     # This plugin assumes {Register}{AllowLoginName}, otherwise it will do nothing
     
     return $loginName unless $Foswiki::cfg{Register}{AllowLoginName};
-    
+
     if ( $Foswiki::cfg{Plugins}{ModifyLoginPlugin}{ChangeCase} eq 'lowercase' ) {
         $loginName = lc($loginName);
     }

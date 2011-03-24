@@ -11,6 +11,8 @@ The features for modifying the login name are
 
 And it describes how to alter the registration topic to ensure login name is in right upper/lower case for the new user. (Manual modification description) 
 
+Additionally the plugin enables assigning a login name when specific topics are being viewed.
+
 ---++ Plugin Preferences
 
 Plugin preferences are set using =configure=
@@ -24,7 +26,10 @@ The plugin does not have any preferences that can be set in topics.
       
 
    * $Foswiki::cfg{Plugins}{ModifyLoginPlugin}{StripAfterAtsign}
-      * Enabled means strips all characters after a @ including the @ 
+      * Enabled means strips all characters after a @ including the @
+      
+   * $Foswiki::cfg{Plugins}{ModifyLoginPlugin}{MapPathToUser}
+      * A list of paths that maps to special users
       
 ---++ Ensure correct case at registration
 
@@ -51,6 +56,40 @@ and change it to this if you want to change to lowercase
 </verbatim>
 
 
+---++ Modify the login/user name based on the URL path
+
+The plugin allows hardcoded mappings to a specific username based on the topic being viewed.
+
+This allows the administrator to create a very controlled "back door" typically used to lookup information without authentication.
+
+The typical use case is:
+
+   * You have a Foswiki installation where guest access is by default disabled. Ie. all webs have DENYWEBACCESS = <nop>WikiGuest
+   * And/or you always want normal viewing of topics to happen as an authenticated user. This can be because the views or default values in entry fields depend on the user being authenticated
+   * You need one special topic with a SEARCH to work without authentication. E.g. a topic that lookup information in a web used as a database wiki application and return it as XML. This topic is used by an external program that cannot authenticate
+   * The Foswiki installation is setup with a single sign on authentication (e.g. a corporate LDAP) and you cannot create an authenticated service account.
+   
+You can now do the following.
+
+   * Register a special user for the purpose. E.g create a user with the login =dbuser= and !WikiName =DatabaseUser=
+   * Create the query topic that contains the SEARCH or QUERY that fetch the information from the database topics. Make sure this topic has a ALLOWTOPICCHANGE setting to prevent hackers from modifying the topic and abuse it as a back door. E.g. We create a topic called =/Databaseweb/QueryTopic=
+   * In configure you find the settings for the ModifyLoginPlugin and map this topic to the dbuser by setting the {Plugins}{ModifyLoginPlugin}{MapPathToUser} to.   
+   <verbatim>
+   {
+     '/Databaseweb/QueryTopic' => 'dbuser'
+   }
+   </verbatim>
+
+Other use cases can be that you have a web which is view restricted to a specific group because the topics contain confidencial information. But you would like to be able to create a SEARCH that returns the content of a few formfields that do not contain any sensitive information. You can now do the following.
+
+   * Again create this special user
+   * Add this special user to the group that has access to the confidencial web.
+   * Create a topic containing a SEARCH that return the information from the formfields that are not sensitive.
+   * Protect this topic against changes from others. Make sure the special user does not get edit rights either.
+   * Map this special topic to the special user in {Plugins}{ModifyLoginPlugin}{MapPathToUser}
+   
+Note that if you are already logged in and you are a member of the !AdminGroup the plugin will not change your login name. This enables the admin to put an ALLOWTOPICCHANGE in the special topic and still be able to edit this topic.
+
 <!--
 One line description, required for extensions repository catalog.
    * Set SHORTDESCRIPTION = %$SHORTDESCRIPTION%
@@ -67,6 +106,7 @@ One line description, required for extensions repository catalog.
 |  Release: | %$RELEASE% |
 |  Version: | %$VERSION% |
 |  Change&nbsp;History: | <!-- versions below in reverse order -->&nbsp; |
+|  24 Mar 2011 (2.0) | Added the feature that can map a /web/topic path to a special username | 
 |  24 Feb 2010 (1.0) | Initial release |
 |  Home: | http://foswiki.org/Extensions/%TOPIC% |
 |  Support: | http://foswiki.org/Support/%TOPIC% |
