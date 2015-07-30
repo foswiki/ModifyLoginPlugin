@@ -106,6 +106,7 @@ One line description, required for extensions repository catalog.
 |  Release: | %$RELEASE% |
 |  Version: | %$VERSION% |
 |  Change&nbsp;History: | <!-- versions below in reverse order -->&nbsp; |
+|  30 Jul 2015 (2.1) | Foswiki:Main.OlivierRaginel - prevent changing already authenticated admin |
 |  24 Mar 2011 (2.0) | Added the feature that can map a /web/topic path to a special username | 
 |  24 Feb 2010 (1.0) | Initial release |
 |  Home: | http://foswiki.org/Extensions/%TOPIC% |

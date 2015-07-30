@@ -48,10 +48,10 @@ use Foswiki::Plugins ();    # For the API version
 # *must* exist in this package. This should always be in the format
 # $Rev: 5771 $ so that Foswiki can determine the checked-in status of the
 # extension.
-our $VERSION = '$Rev: 5771 $';
+our $VERSION = '2.1';
 
 # $RELEASE is used in the "Find More Extensions" automation in configure.
-our $RELEASE = '2.0';
+our $RELEASE = '2.1';
 
 # Short description of this plugin
 # One line description, is shown in the %SYSTEMWEB%.TextFormattingRules topic:
